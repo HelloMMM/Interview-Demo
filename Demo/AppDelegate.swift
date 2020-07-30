@@ -15,6 +15,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
+        if UserDefaults.standard.object(forKey: "collectionLibrary") != nil {
+            
+            collectionLibrary = UserDefaults.standard.dictionary(forKey: "collectionLibrary") as! Dictionary<String, Dictionary<String, String>>
+        }
         return true
     }
 }

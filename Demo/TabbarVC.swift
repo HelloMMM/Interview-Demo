@@ -11,6 +11,8 @@ import ESTabBarController_swift
 
 class TabbarVC: ESTabBarController {
 
+    var homeVC: UINavigationController?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -31,4 +33,3 @@ class TabbarVC: ESTabBarController {
         viewControllers = [homeVC, collectionVC]
     }
 }
-

@@ -14,6 +14,7 @@ import DGElasticPullToRefresh
 class SearchResultVC: UIViewController {
 
     @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var alertView: UIView!
     var collectionFooterView: CollectionFooterView?
     let searchResultVM = SearchResultVM()
     var searchResultModel: SearchResultModel?
@@ -39,6 +40,8 @@ class SearchResultVC: UIViewController {
                 self.collectionView.reloadData()
             }
         }
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadData), name: NSNotification.Name(rawValue: "reloadData"), object: nil)
     }
     
     func initUI() {
@@ -53,6 +56,7 @@ class SearchResultVC: UIViewController {
         collectionView.collectionViewLayout = layout
         
         let loadingView = DGElasticPullToRefreshLoadingViewCircle()
+        collectionView.dg_setPullToRefreshFillColor(UIColor(red: 57/255.0, green: 67/255.0, blue: 89/255.0, alpha: 1.0))
         collectionView.dg_addPullToRefreshWithActionHandler({ [weak self] () -> Void in
             
             self?.page = 1
@@ -60,7 +64,6 @@ class SearchResultVC: UIViewController {
             self?.photoData.removeAll()
             self?.searchResultVM.postAPI(self!.searchData)
         }, loadingView: loadingView)
-        collectionView.dg_setPullToRefreshFillColor(UIColor(red: 57/255.0, green: 67/255.0, blue: 89/255.0, alpha: 1.0))
         
         let collectionFooterView = UINib(nibName: "CollectionFooterView", bundle: nil)
         collectionView.register(collectionFooterView, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: "CollectionFooterView")
@@ -82,13 +85,22 @@ class SearchResultVC: UIViewController {
         searchData["page"] = page
         searchResultVM.postAPI(searchData)
     }
+    
+    @objc func reloadData() {
+        
+        collectionView.reloadData()
+    }
 }
 
 extension SearchResultVC: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
         
-        return CGSize(width: collectionView.bounds.size.width, height: 55)
+        if photoData.count != 0 {
+            return CGSize(width: collectionView.bounds.size.width, height: 55)
+        } else {
+            return .zero
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
@@ -104,14 +116,23 @@ extension SearchResultVC: UICollectionViewDelegate, UICollectionViewDataSource, 
     
     func collectionView(_ collectionView: UICollectionView, willDisplaySupplementaryView view: UICollectionReusableView, forElementKind elementKind: String, at indexPath: IndexPath) {
         if elementKind == UICollectionView.elementKindSectionFooter {
-            collectionFooterView?.activityIndicatorView.startAnimating()
-            loadAPI()
+            
+            if photoData.count != 0 {
+                collectionFooterView?.activityIndicatorView.startAnimating()
+                loadAPI()
+            }
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
+        if photoData.count != 0 {
+            alertView.alpha = 0
+        } else {
+            alertView.alpha = 1
+        }
         return photoData.count
+        
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -119,15 +140,7 @@ extension SearchResultVC: UICollectionViewDelegate, UICollectionViewDataSource, 
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SearchResultCell", for: indexPath) as! SearchResultCell
         
         let photoModel = photoData[indexPath.row]
-        cell.name.text = photoModel.title
-
-        let id = photoModel.id
-        let secret = photoModel.secret
-        let photoUrl = URL(string: "https://farm1.staticflickr.com/2/\(id)_\(secret)_m.jpg")
-        cell.imageView.sd_setImage(with: photoUrl) { (image, error, type, url) in
-
-            cell.imageView.hideSkeleton()
-        }
+        cell.photoModel = photoModel
         
         return cell
     }

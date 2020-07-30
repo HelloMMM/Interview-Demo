@@ -18,10 +18,7 @@ class AlamofireManager: NSObject {
                                                      "method": "flickr.photos.search",
                                                      "format": "json",
                                                      "nojsoncallback": 1]
-    
-    
-    
-    
+   
     func requestAPI(parameters: Dictionary<String, Any>, onSuccess: @escaping ([PhotoModel]) -> (), onError: @escaping (Error) -> ()) {
         
         for (key, value) in parameters {

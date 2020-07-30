@@ -23,8 +23,3 @@ class NVLoadingView: UIView {
         NVActivityIndicatorPresenter.sharedInstance.stopAnimating()
     }
 }
-
-//extension NVLoadingView: NVActivityIndicatorViewable {
-//
-//
-//}

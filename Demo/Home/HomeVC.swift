@@ -16,6 +16,7 @@ class HomeVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        
     }
     
     @IBAction func searchClick(_ sender: UIButton) {
