@@ -88,11 +88,7 @@ extension SearchResultVC: UICollectionViewDelegate, UICollectionViewDataSource, 
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
         
-        if isLoading {
-            return CGSize.zero
-        } else {
-            return CGSize(width: collectionView.bounds.size.width, height: 55)
-        }
+        return CGSize(width: collectionView.bounds.size.width, height: 55)
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {

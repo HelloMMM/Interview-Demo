@@ -133,9 +133,22 @@
                                                     <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Qfm-P8-wIC">
+                                                    <rect key="frame" x="112" y="15" width="25" height="22"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="25" id="hwH-JD-u7z"/>
+                                                        <constraint firstAttribute="height" constant="22" id="ovP-EY-WsU"/>
+                                                    </constraints>
+                                                    <state key="normal" image="collect"/>
+                                                    <connections>
+                                                        <action selector="collectionClick:" destination="SzV-cP-B9N" eventType="touchUpInside" id="k45-08-Zmp"/>
+                                                    </connections>
+                                                </button>
                                             </subviews>
                                             <constraints>
+                                                <constraint firstAttribute="trailing" secondItem="Qfm-P8-wIC" secondAttribute="trailing" constant="15" id="1yL-Yo-ps3"/>
                                                 <constraint firstItem="3ag-Ck-8uQ" firstAttribute="top" secondItem="hWL-Vh-GSD" secondAttribute="bottom" id="3bQ-aN-pOq"/>
+                                                <constraint firstItem="Qfm-P8-wIC" firstAttribute="top" secondItem="8UM-88-U2M" secondAttribute="top" constant="15" id="7ie-j4-SdN"/>
                                                 <constraint firstItem="3ag-Ck-8uQ" firstAttribute="leading" secondItem="8UM-88-U2M" secondAttribute="leading" id="Tw7-uM-fi1"/>
                                                 <constraint firstItem="hWL-Vh-GSD" firstAttribute="top" secondItem="8UM-88-U2M" secondAttribute="top" id="ZU9-3r-khT"/>
                                                 <constraint firstAttribute="trailing" secondItem="hWL-Vh-GSD" secondAttribute="trailing" id="djv-aJ-R6Q"/>
@@ -146,6 +159,7 @@
                                         </collectionViewCellContentView>
                                         <size key="customSize" width="152" height="197"/>
                                         <connections>
+                                            <outlet property="collectionBtn" destination="Qfm-P8-wIC" id="R3F-qj-Dgk"/>
                                             <outlet property="imageView" destination="hWL-Vh-GSD" id="aRD-7K-Sgw"/>
                                             <outlet property="name" destination="3ag-Ck-8uQ" id="XA5-Xb-0qW"/>
                                         </connections>
@@ -197,7 +211,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="fzc-Ia-dBa" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="rJK-pS-YV8">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="50"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -215,7 +229,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="M2u-fG-rn3" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="bIE-iC-x9S">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="50"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -233,7 +247,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="yac-Ek-KjG" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="9cl-0X-PXF">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="50"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -246,4 +260,7 @@
             <point key="canvasLocation" x="2563.125" y="-287.5"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="collect" width="25" height="22"/>
+    </resources>
 </document>

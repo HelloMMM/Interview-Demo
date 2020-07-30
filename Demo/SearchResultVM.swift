@@ -16,9 +16,12 @@ class SearchResultVM {
 
         let per_page = data["per_page"] as! Int
         let tags = data["tags"] as! String
+        let page = data["page"] as! Int
         
         let parameters: Dictionary<String, Any> = ["per_page": per_page,
-                                                   "tags": tags]
+                                                   "tags": tags,
+                                                   "page": page]
+        
         AlamofireManager.shared.requestAPI(parameters: parameters, onSuccess: { (photo: [PhotoModel]) in
             
             self.person.value = photo

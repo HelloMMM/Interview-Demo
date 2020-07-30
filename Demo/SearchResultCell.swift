@@ -13,9 +13,20 @@ class SearchResultCell: UICollectionViewCell {
     
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var name: UILabel!
-    
+    @IBOutlet weak var collectionBtn: UIButton!
+    var isCollection = false
     override func awakeFromNib() {
         
         imageView.showAnimatedGradientSkeleton()
+    }
+    
+    @IBAction func collectionClick(_ sender: UIButton) {
+        
+        if isCollection {
+            collectionBtn.setImage(UIImage(named: "collect"), for: .normal)
+        } else {
+            collectionBtn.setImage(UIImage(named: "collect-1"), for: .normal)
+        }
+        isCollection = !isCollection
     }
 }
