@@ -14,6 +14,5 @@ pod 'NVActivityIndicatorView', '~>4.8'
 pod 'Alamofire'
 pod 'SkeletonView'
 pod 'SDWebImage'
-pod 'DGElasticPullToRefresh'
 
 end

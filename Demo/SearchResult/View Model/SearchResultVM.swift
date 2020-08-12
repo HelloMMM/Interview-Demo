@@ -40,6 +40,11 @@ class SearchResultVM {
             
             do {            
                 let model = try JSONDecoder().decode(SearchResultModel.self, from: response.data!)
+                
+                if self.page == 1 {
+                    self.photoData.removeAll()
+                }
+                
                 self.photoData.append(contentsOf: model.photos.photo)
                 
                 if self.photoData.count == 0 {

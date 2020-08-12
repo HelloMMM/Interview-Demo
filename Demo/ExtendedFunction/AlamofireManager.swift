@@ -21,8 +21,6 @@ class AlamofireManager: NSObject {
    
     func requestAPI(parameters: Dictionary<String, Any>, onSuccess: @escaping (AFDataResponse<Any>) -> (), onError: @escaping (Error) -> ()) {
         
-        NVLoadingView.startBlockLoadingView()
-        
         let url = getUrlStr(parameters: parameters)
         
         for (key, value) in parameters {
@@ -40,8 +38,6 @@ class AlamofireManager: NSObject {
             case .failure(let error):
                 onError(error)
             }
-            
-            NVLoadingView.stopBlockLoadingView()
         }
     }
     

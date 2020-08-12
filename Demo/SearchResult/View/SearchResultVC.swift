@@ -9,7 +9,6 @@
 import UIKit
 import SDWebImage
 import SkeletonView
-import DGElasticPullToRefresh
 
 class SearchResultVC: UIViewController {
 
@@ -19,6 +18,7 @@ class SearchResultVC: UIViewController {
     let searchResultVM = SearchResultVM()
     var searchResultModel: SearchResultModel?
     var homeModel: HomeModel?
+    var refreshControl: UIRefreshControl!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,7 +32,8 @@ class SearchResultVC: UIViewController {
         searchResultVM.person.addObserver { (bool) in
             
             if bool {
-                self.collectionView.dg_stopLoading()
+                
+                self.refreshControl.endRefreshing()
                 self.collectionFooterView?.activityIndicatorView.stopAnimating()
                 self.searchResultVM.isLoading = false
                 DispatchQueue.main.async {
@@ -55,23 +56,20 @@ class SearchResultVC: UIViewController {
         
         collectionView.collectionViewLayout = layout
         
-        let loadingView = DGElasticPullToRefreshLoadingViewCircle()
-        collectionView.dg_setPullToRefreshFillColor(UIColor(red: 57/255.0, green: 67/255.0, blue: 89/255.0, alpha: 1.0))
-        collectionView.dg_addPullToRefreshWithActionHandler({ [weak self] () -> Void in
-            
-            self?.searchResultVM.page = 1
-            self?.searchResultVM.photoData.removeAll()
-            self?.searchResultVM.postAPI(homeModel: self!.homeModel!)
-        }, loadingView: loadingView)
-        
+        refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(postAPI), for: .valueChanged)
+        collectionView.addSubview(refreshControl)
+
         let collectionFooterView = UINib(nibName: "CollectionFooterView", bundle: nil)
         collectionView.register(collectionFooterView, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: "CollectionFooterView")
         
-        searchResultVM.postAPI(homeModel: homeModel!)
+        postAPI()
     }
     
-    deinit {
-        collectionView.dg_removePullToRefresh()
+    @objc func postAPI() {
+        
+        searchResultVM.page = 1
+        searchResultVM.postAPI(homeModel: homeModel!)
     }
     
     @objc func reloadData() {
