@@ -19,9 +19,8 @@ class CollectionCell: UICollectionViewCell {
     @IBOutlet weak var collectionBtn: UIButton!
     var delegate: CollectionCellDelegate?
     var photoUrl = ""
-    var photoModel: Dictionary<String, String> = [:] {
+    var photoModel: PhotoModel? {
         didSet {
-            
             updateUI()
         }
     }
@@ -33,8 +32,10 @@ class CollectionCell: UICollectionViewCell {
     
     func updateUI() {
         
-        name.text = photoModel["title"]
-        photoUrl = photoModel["photoUrl"]!
+        name.text = photoModel?.title
+        let id = photoModel!.id
+        let secret = photoModel!.secret
+        photoUrl = "https://farm1.staticflickr.com/2/\(id)_\(secret)_m.jpg"
         imageView.sd_setImage(with: URL(string: photoUrl)) { (image, error, type, url) in
 
             self.imageView.hideSkeleton()
@@ -43,8 +44,13 @@ class CollectionCell: UICollectionViewCell {
     
     @IBAction func collectionClick(_ sender: UIButton) {
         
-        collectionLibrary[photoModel["id"]!] = nil
-        UserDefaults.standard.set(collectionLibrary, forKey: "collectionLibrary")
+        let id = "id = '\(photoModel!.id)'"
+        CoreDataConnect.shared.delete(predicate: id)
+        
+        if CoreDataConnect.shared.retrieve(predicate: nil, sort: nil, limit: nil) != nil {
+            collectionLibrary = CoreDataConnect.shared.retrieve(predicate: nil, sort: nil, limit: nil)!
+        }
+        
         delegate?.reloadData()
     }
 }

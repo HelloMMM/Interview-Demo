@@ -10,7 +10,7 @@ import Foundation
 
 struct SearchResultModel: Codable {
     
-    var photos: Dictionary<String, PhotosModel>
+    var photos: PhotosModel
     var stat: String
 }
 
@@ -19,9 +19,10 @@ struct PhotosModel: Codable {
     var page: Int
     var pages: Int
     var perpage: Int
-    var total: Int
+    var total: String
     var photo: Array<PhotoModel>
 }
+
 struct PhotoModel: Codable {
     
     var id: String

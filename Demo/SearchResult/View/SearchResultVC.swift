@@ -18,30 +18,30 @@ class SearchResultVC: UIViewController {
     var collectionFooterView: CollectionFooterView?
     let searchResultVM = SearchResultVM()
     var searchResultModel: SearchResultModel?
-    var searchData: Dictionary<String, Any> = [:]
-    var photoData: [PhotoModel] = [] 
-    var isLoading = false
-    var page = 1
+    var homeModel: HomeModel?
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        title = "搜尋結果 \(searchData["tags"] as! String)"
+        title = "搜尋結果 \(homeModel?.tags ?? "")"
         
         initUI()
         
-        searchResultVM.person.addObserver { (photo: [PhotoModel]) in
-
-            self.collectionView.dg_stopLoading()
-            self.isLoading = false
-            self.photoData.append(contentsOf: photo)
-            self.collectionFooterView?.activityIndicatorView.stopAnimating()
-            DispatchQueue.main.async {
-                self.collectionView.reloadData()
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadData), name: NSNotification.Name(rawValue: "reloadData"), object: nil)
+        
+        searchResultVM.person.addObserver { (bool) in
+            
+            if bool {
+                self.collectionView.dg_stopLoading()
+                self.collectionFooterView?.activityIndicatorView.stopAnimating()
+                self.searchResultVM.isLoading = false
+                DispatchQueue.main.async {
+                    self.collectionView.reloadData()
+                }
+            } else {
+                self.alertView.alpha = 1
             }
         }
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(reloadData), name: NSNotification.Name(rawValue: "reloadData"), object: nil)
     }
     
     func initUI() {
@@ -59,31 +59,19 @@ class SearchResultVC: UIViewController {
         collectionView.dg_setPullToRefreshFillColor(UIColor(red: 57/255.0, green: 67/255.0, blue: 89/255.0, alpha: 1.0))
         collectionView.dg_addPullToRefreshWithActionHandler({ [weak self] () -> Void in
             
-            self?.page = 1
-            self?.searchData["page"] = self?.page
-            self?.photoData.removeAll()
-            self?.searchResultVM.postAPI(self!.searchData)
+            self?.searchResultVM.page = 1
+            self?.searchResultVM.photoData.removeAll()
+            self?.searchResultVM.postAPI(homeModel: self!.homeModel!)
         }, loadingView: loadingView)
         
         let collectionFooterView = UINib(nibName: "CollectionFooterView", bundle: nil)
         collectionView.register(collectionFooterView, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: "CollectionFooterView")
         
-        loadAPI()
+        searchResultVM.postAPI(homeModel: homeModel!)
     }
     
     deinit {
         collectionView.dg_removePullToRefresh()
-    }
-    
-    func loadAPI() {
-        
-        if !isLoading {
-            isLoading = true
-        }
-        
-        page += 1
-        searchData["page"] = page
-        searchResultVM.postAPI(searchData)
     }
     
     @objc func reloadData() {
@@ -96,7 +84,7 @@ extension SearchResultVC: UICollectionViewDelegate, UICollectionViewDataSource, 
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
         
-        if photoData.count != 0 {
+        if searchResultVM.photoData.count != 0 {
             return CGSize(width: collectionView.bounds.size.width, height: 55)
         } else {
             return .zero
@@ -117,29 +105,23 @@ extension SearchResultVC: UICollectionViewDelegate, UICollectionViewDataSource, 
     func collectionView(_ collectionView: UICollectionView, willDisplaySupplementaryView view: UICollectionReusableView, forElementKind elementKind: String, at indexPath: IndexPath) {
         if elementKind == UICollectionView.elementKindSectionFooter {
             
-            if photoData.count != 0 {
+            if searchResultVM.photoData.count != 0 {
                 collectionFooterView?.activityIndicatorView.startAnimating()
-                loadAPI()
+                searchResultVM.nextLoadAPI(homeModel: homeModel!)
             }
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
-        if photoData.count != 0 {
-            alertView.alpha = 0
-        } else {
-            alertView.alpha = 1
-        }
-        return photoData.count
-        
+        return searchResultVM.photoData.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SearchResultCell", for: indexPath) as! SearchResultCell
         
-        let photoModel = photoData[indexPath.row]
+        let photoModel = searchResultVM.photoData[indexPath.row]
         cell.photoModel = photoModel
         
         return cell
@@ -147,7 +129,7 @@ extension SearchResultVC: UICollectionViewDelegate, UICollectionViewDataSource, 
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     
-        let pohotModel = photoData[indexPath.row]
+        let pohotModel = searchResultVM.photoData[indexPath.row]
         
         let alert = UIAlertController(title: "", message: pohotModel.title, preferredStyle: .alert)
         let ok = UIAlertAction(title: "確定", style: .default, handler: nil)
@@ -156,7 +138,7 @@ extension SearchResultVC: UICollectionViewDelegate, UICollectionViewDataSource, 
         present(alert, animated: true, completion: nil)
     }
     
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+//    func scrollViewDidScroll(_ scrollView: UIScrollView) {
         
 //        let offsetY = scrollView.contentOffset.y
 //        let contentHeight = scrollView.contentSize.height
@@ -165,5 +147,5 @@ extension SearchResultVC: UICollectionViewDelegate, UICollectionViewDataSource, 
 //
 //            loadAPI()
 //        }
-    }
+//    }
 }

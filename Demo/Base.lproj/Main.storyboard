@@ -48,9 +48,9 @@
                                     <outlet property="delegate" destination="Qka-cc-P5A" id="d7H-9m-4tE"/>
                                 </connections>
                             </textField>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3zG-nZ-EZ6">
+                            <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3zG-nZ-EZ6">
                                 <rect key="frame" x="0.0" y="430" width="320" height="50"/>
-                                <color key="backgroundColor" red="0.018706696110000001" green="0.47369521860000002" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="backgroundColor" systemColor="systemGrayColor" red="0.5568627451" green="0.5568627451" blue="0.57647058819999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="bKf-pl-5cC"/>
                                 </constraints>
@@ -80,6 +80,7 @@
                     <navigationItem key="navigationItem" title="搜尋輸入頁" id="UR5-E1-BbU"/>
                     <connections>
                         <outlet property="pageNumber" destination="4wR-ui-yvK" id="EZl-4s-2hh"/>
+                        <outlet property="searchBtn" destination="3zG-nZ-EZ6" id="Y3W-7H-H66"/>
                         <outlet property="searchLab" destination="A40-Dn-fcX" id="H54-bg-SRA"/>
                     </connections>
                 </viewController>
@@ -379,7 +380,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="yac-Ek-KjG" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="9cl-0X-PXF">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="50"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>

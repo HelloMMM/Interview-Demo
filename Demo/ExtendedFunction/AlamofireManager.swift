@@ -13,47 +13,45 @@ class AlamofireManager: NSObject {
     
     static let shared = AlamofireManager()
     
-    let baseUrl = "https://www.flickr.com/services/rest/"
-    var formalParameters: Dictionary<String, Any> = ["api_key": "2ac945871a3ff14c42a885dd9fcef862",
+    let baseUrl = "https://www.flickr.com/"
+    var formalParameters: Dictionary<String, Any> = ["api_key": api_key,
                                                      "method": "flickr.photos.search",
                                                      "format": "json",
                                                      "nojsoncallback": 1]
    
-    func requestAPI(parameters: Dictionary<String, Any>, onSuccess: @escaping ([PhotoModel]) -> (), onError: @escaping (Error) -> ()) {
+    func requestAPI(parameters: Dictionary<String, Any>, onSuccess: @escaping (AFDataResponse<Any>) -> (), onError: @escaping (Error) -> ()) {
+        
+        NVLoadingView.startBlockLoadingView()
+        
+        let url = getUrlStr(parameters: parameters)
         
         for (key, value) in parameters {
             
             formalParameters[key] = value
         }
         
-        AF.request(baseUrl, method: .post, parameters: formalParameters, encoding: URLEncoding.default).responseJSON { (response) in
+        AF.request(url, method: .post, parameters: formalParameters, encoding: URLEncoding.default).responseJSON { (response) in
             
             switch response.result {
                 
-            case .success(let json):
+            case .success(_):
                 
-                let responseJson = json as! Dictionary<String, Any>
-                let photos = responseJson["photos"] as! Dictionary<String, Any>
-                let photo = photos["photo"] as! Array<Any>
-
-                do {
-                    let data = try JSONSerialization.data(withJSONObject: photo, options: [])
-                    do {
-                        
-                        let model = try JSONDecoder().decode([PhotoModel].self, from: data)
-                        onSuccess(model)
-                    } catch let error {
-
-                        onError(error)
-                    }
-                } catch let error {
-
-                    onError(error)
-                }
+                onSuccess(response)
             case .failure(let error):
                 onError(error)
             }
             
+            NVLoadingView.stopBlockLoadingView()
         }
+    }
+    
+    func getUrlStr(parameters: Dictionary<String, Any>) -> String {
+        
+        let ctl = parameters["ctl"] as! String
+        let act = parameters["act"] as! String
+        
+        let url = "\(baseUrl)\(ctl)/\(act)"
+        
+        return url
     }
 }

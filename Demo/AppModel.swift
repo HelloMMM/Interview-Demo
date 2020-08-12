@@ -7,5 +7,7 @@
 //
 
 import Foundation
+import CoreData
 
-var collectionLibrary: Dictionary<String, Dictionary<String, String>> = [:]
+var collectionLibrary: Array<NSManagedObject> = []
+var api_key = "2ac945871a3ff14c42a885dd9fcef862"

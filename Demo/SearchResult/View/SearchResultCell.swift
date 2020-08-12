@@ -39,7 +39,7 @@ class SearchResultCell: UICollectionViewCell {
             self.imageView.hideSkeleton()
         }
         
-        if collectionLibrary[photoModel!.id] != nil {
+        if CoreDataConnect.shared.someEntityExists(id: photoModel!.id) {
             
             isCollection = true
             collectionBtn.setImage(UIImage(named: "collect-1"), for: .normal)
@@ -54,14 +54,26 @@ class SearchResultCell: UICollectionViewCell {
         
         if isCollection {
             collectionBtn.setImage(UIImage(named: "collect"), for: .normal)
-            collectionLibrary[photoModel!.id] = nil
+
+            let id = "id = '\(photoModel!.id)'"
+            CoreDataConnect.shared.delete(predicate: id)
         } else {
+            
             collectionBtn.setImage(UIImage(named: "collect-1"), for: .normal)
-            collectionLibrary[photoModel!.id] = ["photoUrl": photoUrl,
-                                                 "title": photoModel!.title,
-                                                 "id": photoModel!.id]
+            
+            let coreData: [String: Any] = ["id": photoModel!.id, "owner": photoModel!.owner,
+                                           "secret": photoModel!.secret, "server": photoModel!.server,
+                                           "farm": photoModel!.farm, "title": photoModel!.title,
+                                           "ispublic": photoModel!.ispublic, "isfriend": photoModel!.isfriend,
+                                           "isfamily": photoModel!.isfamily]
+            
+            CoreDataConnect.shared.insert(attributeInfo: coreData)
+            
+        }
+        
+        if CoreDataConnect.shared.retrieve(predicate: nil, sort: nil, limit: nil) != nil {
+            collectionLibrary = CoreDataConnect.shared.retrieve(predicate: nil, sort: nil, limit: nil)!
         }
         isCollection = !isCollection
-        UserDefaults.standard.set(collectionLibrary, forKey: "collectionLibrary")
     }
 }

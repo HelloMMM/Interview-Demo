@@ -11,18 +11,23 @@ import UIKit
 class CollectionVC: UIViewController {
     
     @IBOutlet weak var collectionView: UICollectionView!
-    var photoAry: Array<Dictionary<String, String>>!
     @IBOutlet weak var alertView: UIView!
+    let collectionVM = CollectionVM()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        dataProcess()
         initUI()
+        
+        collectionVM.person.addObserver { (bool) in
+            
+            self.collectionView.reloadData()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        dataProcess()
+        
+        collectionVM.dataProcess()
     }
     
     func initUI() {
@@ -35,14 +40,8 @@ class CollectionVC: UIViewController {
         layout.scrollDirection = .vertical
         
         collectionView.collectionViewLayout = layout
-    }
-    
-    func dataProcess() {
-        photoAry = collectionLibrary.map({ (key, value) in
-            return value
-        })
         
-        collectionView.reloadData()
+        collectionVM.dataProcess()
     }
 }
 
@@ -50,19 +49,19 @@ extension CollectionVC: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
-        if photoAry.count == 0 {
+        if collectionVM.photoModels.count == 0 {
             alertView.alpha = 1
         } else {
             alertView.alpha = 0
         }
         
-        return photoAry.count
+        return collectionLibrary.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CollectionCell", for: indexPath) as! CollectionCell
-        let photoModel = photoAry[indexPath.row]
+        let photoModel = collectionVM.photoModels[indexPath.row]
         cell.photoModel = photoModel
         cell.delegate = self
         
@@ -73,7 +72,7 @@ extension CollectionVC: UICollectionViewDelegate, UICollectionViewDataSource {
 extension CollectionVC: CollectionCellDelegate {
     
     func reloadData() {
-        dataProcess()
+        collectionVM.dataProcess()
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "reloadData"), object: nil)
     }
 }
