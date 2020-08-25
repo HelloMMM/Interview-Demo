@@ -38,7 +38,7 @@ class HomeVC: UIViewController {
         let searchResultVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "SearchResultVC") as! SearchResultVC
         
         let homeModel = HomeModel(tags: searchLab.text!, per_page: Int(pageNumber.text!)!)
-        searchResultVC.homeModel = homeModel
+        searchResultVC.searchResultVM.homeModel = homeModel
         navigationController?.pushViewController(searchResultVC, animated: true)
     }
     

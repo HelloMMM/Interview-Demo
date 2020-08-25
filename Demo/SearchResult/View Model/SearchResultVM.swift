@@ -11,24 +11,25 @@ import Foundation
 class SearchResultVM {
     
     var person: Observable<Bool> = Observable(true)
+    var homeModel: HomeModel?
     var photoData: [PhotoModel] = []
     var page: Int = 1
     var isLoading = false
     
-    func nextLoadAPI(homeModel: HomeModel) {
+    func nextLoadAPI() {
         
         if !isLoading {
             isLoading = true
         }
         
         page += 1
-        postAPI(homeModel: homeModel)
+        postAPI()
     }
     
-    func postAPI(homeModel: HomeModel) {
+    func postAPI() {
 
-        let per_page = homeModel.per_page
-        let tags = homeModel.tags
+        let per_page = homeModel!.per_page
+        let tags = homeModel!.tags
 
         let parameters: Dictionary<String, Any> = ["ctl": "services",
                                                    "act": "rest",

@@ -16,14 +16,12 @@ class SearchResultVC: UIViewController {
     @IBOutlet weak var alertView: UIView!
     var collectionFooterView: CollectionFooterView?
     let searchResultVM = SearchResultVM()
-    var searchResultModel: SearchResultModel?
-    var homeModel: HomeModel?
     var refreshControl: UIRefreshControl!
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        title = "搜尋結果 \(homeModel?.tags ?? "")"
+        title = "搜尋結果 \(searchResultVM.homeModel?.tags ?? "")"
         
         initUI()
         
@@ -69,7 +67,7 @@ class SearchResultVC: UIViewController {
     @objc func postAPI() {
         
         searchResultVM.page = 1
-        searchResultVM.postAPI(homeModel: homeModel!)
+        searchResultVM.postAPI()
     }
     
     @objc func reloadData() {
@@ -105,7 +103,7 @@ extension SearchResultVC: UICollectionViewDelegate, UICollectionViewDataSource, 
             
             if searchResultVM.photoData.count != 0 {
                 collectionFooterView?.activityIndicatorView.startAnimating()
-                searchResultVM.nextLoadAPI(homeModel: homeModel!)
+                searchResultVM.nextLoadAPI()
             }
         }
     }
